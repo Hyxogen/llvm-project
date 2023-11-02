@@ -984,7 +984,7 @@ INTERCEPTOR(SSIZE_T, read, int fd, void *ptr, SIZE_T count) {
 #endif
 
 #if SANITIZER_INTERCEPT_FREAD
-INTERCEPTOR(SIZE_T, fread, void *ptr, SIZE_T size, SIZE_T nmemb, void *file) {
+INTERCEPTOR(SIZE_T, fread, void *ptr, SIZE_T size, SIZE_T nmemb, __sanitizer_FILE *file) {
   // libc file streams can call user-supplied functions, see fopencookie.
   void *ctx;
   COMMON_INTERCEPTOR_ENTER(ctx, fread, ptr, size, nmemb, file);
@@ -1101,7 +1101,7 @@ INTERCEPTOR(SSIZE_T, write, int fd, void *ptr, SIZE_T count) {
 #endif
 
 #if SANITIZER_INTERCEPT_FWRITE
-INTERCEPTOR(SIZE_T, fwrite, const void *p, uptr size, uptr nmemb, void *file) {
+INTERCEPTOR(SIZE_T, fwrite, const void *p, uptr size, uptr nmemb, __sanitizer_FILE *file) {
   // libc file streams can call user-supplied functions, see fopencookie.
   void *ctx;
   COMMON_INTERCEPTOR_ENTER(ctx, fwrite, p, size, nmemb, file);
@@ -1194,7 +1194,7 @@ INTERCEPTOR(SSIZE_T, pwritev64, int fd, __sanitizer_iovec *iov, int iovcnt,
 #endif
 
 #if SANITIZER_INTERCEPT_FGETS
-INTERCEPTOR(char *, fgets, char *s, SIZE_T size, void *file) {
+INTERCEPTOR(char *, fgets, char *s, SIZE_T size, __sanitizer_FILE *file) {
   // libc file streams can call user-supplied functions, see fopencookie.
   void *ctx;
   COMMON_INTERCEPTOR_ENTER(ctx, fgets, s, size, file);
@@ -1212,7 +1212,7 @@ INTERCEPTOR(char *, fgets, char *s, SIZE_T size, void *file) {
 #endif
 
 #if SANITIZER_INTERCEPT_FPUTS
-INTERCEPTOR_WITH_SUFFIX(int, fputs, char *s, void *file) {
+INTERCEPTOR_WITH_SUFFIX(int, fputs, const char *s, __sanitizer_FILE *file) {
   // libc file streams can call user-supplied functions, see fopencookie.
   void *ctx;
   COMMON_INTERCEPTOR_ENTER(ctx, fputs, s, file);
@@ -1227,7 +1227,7 @@ INTERCEPTOR_WITH_SUFFIX(int, fputs, char *s, void *file) {
 #endif
 
 #if SANITIZER_INTERCEPT_PUTS
-INTERCEPTOR(int, puts, char *s) {
+INTERCEPTOR(int, puts, const char *s) {
   // libc file streams can call user-supplied functions, see fopencookie.
   void *ctx;
   COMMON_INTERCEPTOR_ENTER(ctx, puts, s);
